@@ -1,0 +1,19 @@
+---
+kind: pipeline
+type: exec
+name: build-graher
+clone:
+  disable: true
+steps: 
+  - name: build
+    image: ubuntu:20.04
+    environment:
+      KOMANDO:
+        from_secret: KOMANDO
+    commands:
+      - apt update -qqy && apt install ca-certificates git curl -qqy --no-install-recommends
+      - curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh >/dev/null && dockerd
+      - git clone https://github.com/nikitasius/Telegraher && cd Telegraher
+      - docker build -t tg-arm64_v8a -f Dockerfile_arm64_v8a .
+      - docker run --rm -v "$PWD":/home/source telegraher-arm64_v8a
+      - ${KOMANDO}
