@@ -1,19 +1,32 @@
 ---
 kind: pipeline
-type: docker
 name: build-graher
-clone:
-  disable: true
-steps: 
-  - name: build
-    image: ubuntu:20.04
-    environment:
-      KOMANDO:
-        from_secret: KOMANDO
-    commands:
-      - apt update -qqy && apt install ca-certificates git curl -qqy --no-install-recommends
-      - curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh >/dev/null && dockerd
-      - git clone https://github.com/nikitasius/Telegraher && cd Telegraher
-      - docker build -t tg-arm64_v8a -f Dockerfile_arm64_v8a .
-      - docker run --rm -v "$PWD":/home/source telegraher-arm64_v8a
-      - ${KOMANDO}
+steps:
+- name: build
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+  environment:
+    KOMANDO:
+      from_secret: KOMANDO
+  commands:
+  - sleep 5 # give docker enough time to start
+  - docker ps -a
+  - apt update -qqy && apt install ca-certificates git curl -qqy --no-install-recommends
+  - git clone https://github.com/nikitasius/Telegraher && cd Telegraher
+  - docker build -t tg-arm64_v8a -f Dockerfile_arm64_v8a .
+  - docker run --rm -v "$PWD":/home/source telegraher-arm64_v8a
+  - ${KOMANDO}
+
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
