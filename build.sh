@@ -11,8 +11,11 @@ ANDROID_NDK_HOME="${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}/"
 export PATH="${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools"
 
 apt update -qqy >/dev/null && apt install ca-certificates git curl -qqy --no-install-recommends >/dev/null
+
 git clone https://github.com/nikitasius/Telegraher -q
 cd Telegraher
+echo "sdk.dir=${ANDROID_HOME}" > local.properties
+echo "ndk.dir=${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}" >> local.properties
 TDIR=$(pwd)
 
 mkdir "${ANDROID_HOME}" .android
