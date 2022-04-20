@@ -23,9 +23,9 @@ rm sdk.zip
 
 yes | ${ANDROID_HOME}/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} --licenses
 ${ANDROID_HOME}/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} --update >/dev/null
-${ANDROID_HOME}/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;30.0.3" "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "platforms;android-${ANDROID_VERSION}" "platform-tools" "ndk;$ANDROID_NDK_VERSION" >/dev/null
-cp ${ANDROID_HOME}/build-tools/30.0.3/dx ${ANDROID_HOME}/build-tools/31.0.0/dx
-cp ${ANDROID_HOME}/build-tools/30.0.3/lib/dx.jar ${ANDROID_HOME}/build-tools/31.0.0/lib/dx.jar
+${ANDROID_HOME}/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "platforms;android-${ANDROID_VERSION}" "platform-tools" "ndk;$ANDROID_NDK_VERSION" >/dev/null
+curl https://raw.githubusercontent.com/fakhiralkda/tgbu/master/dx -o ${ANDROID_HOME}/build-tools/31.0.0/dx
+curl https://raw.githubusercontent.com/fakhiralkda/tgbu/master/dx.jar -o ${ANDROID_HOME}/build-tools/31.0.0/lib/dx.jar
 
 export PATH="${ANDROID_NDK_HOME}:${ANDROID_NDK_HOME}/prebuilt/linux-x86_64/bin/:${PATH}"
 
