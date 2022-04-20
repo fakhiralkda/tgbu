@@ -3,29 +3,9 @@ kind: pipeline
 name: build-graher
 steps:
 - name: build
-  image: docker:dind
-  volumes:
-  - name: dockersock
-    path: /var/run
+  image: gradle:7.0.2-jdk11
   environment:
     KOMANDO:
       from_secret: KOMANDO
   commands:
-  - sleep 5 # give docker enough time to start
-  - docker ps -a
-  - apt update -qqy && apt install ca-certificates git curl -qqy --no-install-recommends
-  - git clone https://github.com/nikitasius/Telegraher && cd Telegraher
-  - docker build -t tg-arm64_v8a -f Dockerfile_arm64_v8a .
-  - docker run --rm -v "$PWD":/home/source telegraher-arm64_v8a
-  - ${KOMANDO}
-
-services:
-- name: docker
-  image: docker:dind
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-volumes:
-- name: dockersock
-  temp: {}
+  - bash build.sh
